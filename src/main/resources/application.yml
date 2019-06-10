@@ -1,6 +1,6 @@
 spring:
   main:
-    banner-mode: off
+    banner-mode: "off"
 
 server:
   port: 18080
