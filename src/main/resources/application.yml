@@ -1,7 +1,40 @@
 spring:
+  profiles:
+    active: devh2
+---
+#h2
+spring:
   main:
     banner-mode: "off"
-
+  profiles: h2
+  datasource:
+    initialization-mode: always
+  jpa: 
+    properties:
+      hibernate:  
+        hbm2ddl.auto: update
 server:
+  name: qms
   port: 18080
-  
+---
+#mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/feng
+    jdbc-url: jdbc:mysql://localhost:3306/feng
+    username: root
+    password: Welcome1
+    type: com.zaxxer.hikari.HikariDataSource
+    data: classpath:data.sql
+    data-username: root 
+    data-password: Welcome1 
+    initialization-mode: always
+  jpa:
+    properties: 
+      hibernate: 
+        hbm2ddl:  
+          auto: update
+server:
+  name: qms
+  port: 18080
