@@ -36,6 +36,6 @@ public class CustomLogoutHandler extends BaseController implements LogoutHandler
         } else {
             logger.info("requested sessionid={}, authentication is null", request.getRequestedSessionId());
         }
-        responseText(response, successResult(ACTION_LOGOUT, HttpServletResponse.SC_OK, BaseController.getJSON(null)));
+        responseText(response, success(ACTION_LOGOUT, HttpServletResponse.SC_OK, BaseController.getJSON(null)));
     }
 }

@@ -30,8 +30,6 @@ public class SessionController extends BaseController {
 	@Autowired
 	HttpServletRequest request;
 
-	@Autowired
-	CustomUserService userService;
 
 	/****
 	 * Get Login User Session
@@ -45,59 +43,6 @@ public class SessionController extends BaseController {
 		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = context.getAuthentication();
 		logger.debug("requested sessionid={} query auth information", request.getRequestedSessionId());
-		return objectResult(BaseController.ACTION_ACCESS, 200, getJSON(authentication));
-	}
-
-	/****
-	 * Get Login User Privileges
-	 * 
-	 * @return
-	 */
-	@RequestMapping(path = PATH_MY_PRIVILEGE, method = RequestMethod.GET)
-	public Iterable<ApplicationRefUserPrivilege> functions() {
-		return userService.getLoginUserPrivileges();
-	}
-
-	public static JSONObject getJSON(Authentication authentication) {
-		JSONObject object = new JSONObject();
-		try {
-			if (authentication != null) {
-				String name = authentication.getName();
-				boolean isLogged = authentication.isAuthenticated() && !"anonymousUser".equals(name);
-
-				object.put("userName", name);
-				object.put("isLogged", isLogged);
-				if (isLogged) {
-					//object.put("userPermissions", getUserPermissions(name));
-					object.put("userPermissions", getUserPermissions(authentication));
-					// object.put("userPermissions", toJsonArray(authentication.getAuthorities()));
-				}
-			} else {
-				object.put("userName", "Guest");
-				object.put("isLogged", false);
-				object.put("userPermissions", new JSONArray());
-				// return object;
-			}
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-
-		}
-		return object;
-
-	}
-
-	private static JSONArray getUserPermissions(Authentication authentication) {
-		JSONArray userPermissions = new JSONArray();
-		authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).forEach(userPermissions::put);
-		return userPermissions;
-	}
-	
-	@SuppressWarnings("unused")
-	private  JSONArray getUserPermissions(String username) {
-		JSONArray userPermissions = new JSONArray();
-		userService.getAuthority(username).stream().map(GrantedAuthority::getAuthority).forEach(userPermissions::put);
-		//authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).forEach(userPermissions::put);
-		return userPermissions;
+		return success(BaseController.ACTION_ACCESS, 200, getJSON(authentication));
 	}
 }

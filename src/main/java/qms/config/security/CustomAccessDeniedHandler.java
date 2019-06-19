@@ -23,7 +23,7 @@ public class CustomAccessDeniedHandler extends BaseController implements Authent
                 request.getMethod(), request.getRequestedSessionId());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         responseText(response,
-                errorResult(ACTION_ACCESS, HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
+                error(ACTION_ACCESS, HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
     }
 
     // Logged Access Denied
@@ -34,6 +34,6 @@ public class CustomAccessDeniedHandler extends BaseController implements Authent
                 request.getRequestURI(), request.getMethod(), request.getRequestedSessionId());
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         responseText(response,
-                errorResult(ACTION_ACCESS, HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage()));
+                error(ACTION_ACCESS, HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage()));
     }
 }

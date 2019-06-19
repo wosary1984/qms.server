@@ -119,7 +119,7 @@ public class ApiWebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilterAfter(new CsrfTokenResponseHeaderBindingFilter(), CsrfFilter.class);
 
 		// 拦截所有的请求进行定制的授权验证
-		http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
+		//http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
 	}
 
 	// @Override

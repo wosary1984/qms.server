@@ -25,7 +25,7 @@ public class CustomLoginHandler extends BaseController
 		logger.info("User login successfully, name={}, requested seesionid={}, current seesionid={}",
 				authentication.getName(), request.getRequestedSessionId(), request.getSession(false).getId());
 		responseText(response,
-				successResult(ACTION_LOGIN, HttpServletResponse.SC_OK, BaseController.getJSON(authentication)));
+				success(ACTION_LOGIN, HttpServletResponse.SC_OK, BaseController.getJSON(authentication)));
 	}
 
 	// Login Failure
@@ -34,7 +34,7 @@ public class CustomLoginHandler extends BaseController
 			AuthenticationException exception) throws IOException {
 		logger.info("Login failed: {}, requested seesionid={}, current seesionid={}", exception.getMessage(),
 				request.getRequestedSessionId(), request.getSession(false).getId());
-		responseText(response, errorResult(ACTION_LOGIN, HttpServletResponse.SC_OK, exception.getMessage()));
+		responseText(response, error(ACTION_LOGIN, HttpServletResponse.SC_OK, exception.getMessage()));
 	}
 
 }

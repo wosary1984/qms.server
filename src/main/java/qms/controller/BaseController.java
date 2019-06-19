@@ -55,7 +55,6 @@ public abstract class BaseController {
 
 		}
 		return object;
-
 	}
 
 	private static JSONArray getUserPermissions(Authentication authentication) {
@@ -72,7 +71,7 @@ public abstract class BaseController {
 		response.flushBuffer();
 	}
 
-	protected String successResult(String action, int code, Object object) {
+	protected String success(String action, int code, Object object) {
 		JSONObject root = new JSONObject();
 
 		try {
@@ -87,7 +86,7 @@ public abstract class BaseController {
 		return root.toString();
 	}
 
-	protected String errorResult(String action, int code, String message) {
+	protected String error(String action, int code, String message) {
 		JSONObject root = new JSONObject();
 		try {
 			root.put("action", action);
