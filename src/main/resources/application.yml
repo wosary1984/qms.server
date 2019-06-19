@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: devh2
+    active: h2
 ---
 #h2
 spring:

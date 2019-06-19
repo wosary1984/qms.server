@@ -22,7 +22,7 @@ public class TestContrller extends BaseController {
 		if (request.getSession() != null) {
 			logger.info("session id:{}", request.getSession().getId());
 		}
-		return successResult("helloworld", 200, "Hello World from contrller");
+		return success("helloworld", 200, "Hello World from contrller");
 	}
 
 }
