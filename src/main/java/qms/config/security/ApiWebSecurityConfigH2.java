@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-//import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,11 +32,16 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
+import qms.service.user.CustomUserService;
+
 @EnableWebSecurity
 @Profile("h2")
 public class ApiWebSecurityConfigH2 extends WebSecurityConfigurerAdapter {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private CustomUserService loginUserDetailsService;  
 
 	@Autowired
 	private CustomLoginHandler customLoginHandler;
@@ -52,8 +57,9 @@ public class ApiWebSecurityConfigH2 extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance()).withUser("feng")
-				.password("123456").roles("ADMIN").and().withUser("user").password("123456").roles("USER");
+		auth.userDetailsService(loginUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+		// auth.inMemoryAuthentication().passwordEncoder(org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance())
+		// .withUser("feng").password("123456").roles("ADMIN").and().withUser("user").password("123456").roles("USER");
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {

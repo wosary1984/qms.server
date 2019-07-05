@@ -26,7 +26,23 @@ public abstract class BaseController {
 	}
 
 	public enum ResultStatus {
-		ERROR, SUCCESS;
+		// 成员变量
+		Error("E"), Success("S");
+		private String code;
+
+		private ResultStatus(String code) {
+			this.code = code;
+		}
+
+		// get set 方法
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
 	}
 
 	public static JSONObject getJSON(Authentication authentication) {
@@ -77,7 +93,7 @@ public abstract class BaseController {
 		try {
 			root.put("action", action);
 			root.put("code", code);
-			root.put("status", ResultStatus.SUCCESS);
+			root.put("status", ResultStatus.Success.getCode());
 			root.put("data", object);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -91,7 +107,7 @@ public abstract class BaseController {
 		try {
 			root.put("action", action);
 			root.put("code", code);
-			root.put("status", ResultStatus.ERROR);
+			root.put("status", ResultStatus.Error.getCode());
 			root.put("message", message);
 		} catch (JSONException e) {
 			e.printStackTrace();

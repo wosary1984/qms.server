@@ -1,24 +1,42 @@
 spring:
   profiles:
-    active: h2
----
-#h2
-spring:
+    active: "h2"
   main:
     banner-mode: "off"
-  profiles: h2
-  datasource:
-    initialization-mode: always
-  jpa: 
-    properties:
-      hibernate:  
-        hbm2ddl.auto: update
 server:
   name: qms
   port: 18080
+
+---
+#h2
+spring:
+  profiles: h2
+  datasource:
+    initialization-mode: always
+    #jdbc-url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    data: classpath:h2/data.sql
+    username: sa
+    password: 
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+  jpa: 
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:  
+        hbm2ddl.auto: update
+    generate-ddl: false
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+
 ---
 #mysql
 spring:
+  profiles: mysql
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/feng
@@ -35,6 +53,3 @@ spring:
       hibernate: 
         hbm2ddl:  
           auto: update
-server:
-  name: qms
-  port: 18080
