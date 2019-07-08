@@ -5,3 +5,4 @@
 .settings/org.eclipse.jdt.apt.core.prefs
 xs-syncer.log
 .vscode/qms.code-workspace
+.vscode/launch.json
