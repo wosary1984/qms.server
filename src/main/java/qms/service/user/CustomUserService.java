@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import qms.exception.def.NullException;
+import qms.exception.def.BadRequestException;
 import qms.repository.user.ApplicationUser;
 import qms.repository.user.ApplicationUserRepository;
 
@@ -72,7 +72,7 @@ public class CustomUserService implements UserDetailsService {
 	public Iterable<ApplicationUser> getAllUsersExceptMe() {
 		ApplicationUser me = this.getLoginUser();
 		if (me == null) {
-			throw new NullException("login user not found!");
+			throw new BadRequestException("login user not found!");
 		}
 		return applicationUserRepository.getAllUsersExceptMe(me.getUsername());
 	}

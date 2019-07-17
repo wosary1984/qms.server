@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import qms.exception.def.BadRequestException;
 import qms.exception.def.NotFoundException;
-import qms.exception.def.NullException;
 
 
 @RestControllerAdvice
@@ -23,8 +23,8 @@ public class CustomExceptionMapper extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
 	
-	@ExceptionHandler(NullException.class)
-	public ResponseEntity<Object> handleNullException(NullException ex) {
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<Object> handleNullException(BadRequestException ex) {
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
