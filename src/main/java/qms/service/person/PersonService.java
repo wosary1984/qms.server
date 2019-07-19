@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import qms.exception.def.BadRequestException;
@@ -24,12 +26,14 @@ public class PersonService {
 	@Autowired
 	ContextCheckService context;
 
+	@PreAuthorize("hasPermission(#id, 'Person', 'read')")
 	public Iterable<Person> getPersons() {
 		List<Person> dbresult = personRepository.findAll();
 		logger.info("user:{}, query all person information", context.getLoginUser().getUsername());
 		return dbresult;
 	}
 
+	@PreAuthorize("hasPermission(#id, 'Person', 'read')")
 	public Person getPerson(Long personid) {
 		Person person = personRepository.findByPersonid(personid);
 
@@ -41,6 +45,7 @@ public class PersonService {
 		return person;
 	}
 
+	@PreAuthorize("hasPermission(#id, 'Person', 'write')")
 	public Person createPerson(String data) {
 		JSONObject object = new JSONObject(data);
 		Person person = new Person();

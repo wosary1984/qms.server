@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import qms.exception.def.BadRequestException;
+import qms.repository.authorization.privilege.ApplicationPrivilege;
 import qms.repository.user.ApplicationUser;
 import qms.repository.user.ApplicationUserRepository;
 
@@ -35,7 +36,8 @@ public class CustomUserService implements UserDetailsService {
 		ApplicationUser loginUser = applicationUserRepository.findByUsername(username);
 
 		if (loginUser != null) {
-			Collection<GrantedAuthority> grantedAuthorities = getAuthorities();
+			Collection<GrantedAuthority> grantedAuthorities = getAuthorities(loginUser);
+
 			return new User(loginUser.getUsername(), loginUser.getPassword(), grantedAuthorities);
 		} else {
 			logger.error("user:{} is not existed", username);
@@ -43,12 +45,15 @@ public class CustomUserService implements UserDetailsService {
 		}
 	}
 
-	/**  * 获取用户的角色权限,为了降低实验的难度，这里去掉了根据用户名获取角色的步骤     * @param    * @return   */ 
-	private Collection<GrantedAuthority> getAuthorities(){        
-		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();       
-		authList.add(new SimpleGrantedAuthority("ROLE_USER"));      
-		authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));     
-		return authList;    
+	/* 获取用户的角色权限,为了降低实验的难度，这里去掉了根据用户名获取角色的步骤 */
+	private Collection<GrantedAuthority> getAuthorities(ApplicationUser user) {
+		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
+		for (ApplicationPrivilege privilege : user.getPrivileges()) {
+			authList.add(new SimpleGrantedAuthority(privilege.getPrivilege()));
+		}
+		// authList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		// authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		return authList;
 	}
 
 	public ApplicationUser getLoginUser() {

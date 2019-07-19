@@ -1,16 +1,27 @@
 package qms.repository.user;
 
+import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.FetchType;
+
+import qms.repository.authorization.privilege.ApplicationPrivilege;
 
 @Entity
 @Table(name = "T_USER")
-public class ApplicationUser {
+public class ApplicationUser implements Serializable {
+	private static final long serialVersionUID = 3428483429166699L;
+
 	@Id
 	@Column(name = "c_userid")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "USER_ID_GENERATOR")
@@ -25,6 +36,10 @@ public class ApplicationUser {
 
 	@Column(name = "c_locked")
 	private boolean locked;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "T_USERS_PRIVILEGES", joinColumns = @JoinColumn(name = "c_username", referencedColumnName = "c_username"), inverseJoinColumns = @JoinColumn(name = "c_privilege", referencedColumnName = "c_privilege"))
+	private Set<ApplicationPrivilege> privileges;
 
 	public Long getUserid() {
 		return userid;
@@ -56,6 +71,14 @@ public class ApplicationUser {
 
 	public void setLocked(boolean locked) {
 		this.locked = locked;
+	}
+
+	public Set<ApplicationPrivilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(Set<ApplicationPrivilege> privileges) {
+		this.privileges = privileges;
 	}
 
 }
