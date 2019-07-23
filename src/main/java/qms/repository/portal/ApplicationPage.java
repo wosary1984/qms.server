@@ -1,5 +1,6 @@
 package qms.repository.portal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name = "T_PAGE")
-public class ApplicationPage {
+public class ApplicationPage implements Serializable {
+
+	private static final long serialVersionUID = -897328162408178590L;
 
 	@Id
 	@Column(name = "c_page_id")
@@ -29,23 +34,26 @@ public class ApplicationPage {
 	@Column(name = "c_has_deleted", nullable = true)
 	boolean hasDeleted;
 
-	@Column(name = "c_sequence_number", nullable = false)
+	@Column(name = "c_has_child", nullable = true)
+	boolean hasChild;
+
+	@Column(name = "c_sequence_number", nullable = true)
 	String sequenceNumber;
 
-	@Column(name = "c_path", nullable = false)
+	@Column(name = "c_path", nullable = true)
 	String path;
 
-	@Column(name = "c_icon", nullable = false)
+	@Column(name = "c_icon", nullable = true)
 	String icon;
 
-	@Column(name = "c_privilege", nullable = false)
+	@Column(name = "c_privilege", nullable = true)
 	String privilege;
 
-	@Column(name = "c_parent_pageid")
-	Long parentPageid;
+	@Column(name = "c_parent_page_name")
+	String parentPageName;
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@JoinColumn(name = "parentPageid")
+	@JoinColumn(name = "parentPageName")
 	List<ApplicationPage> childs = new ArrayList<ApplicationPage>();
 
 	public Long getPageid() {
@@ -104,20 +112,28 @@ public class ApplicationPage {
 		this.privilege = privilege;
 	}
 
-	public Long getParentPageid() {
-		return parentPageid;
-	}
-
-	public void setParentPageid(Long parentPageid) {
-		this.parentPageid = parentPageid;
-	}
-
 	public List<ApplicationPage> getChilds() {
 		return childs;
 	}
 
 	public void setChilds(List<ApplicationPage> childs) {
 		this.childs = childs;
+	}
+
+	public String getParentPageName() {
+		return parentPageName;
+	}
+
+	public void setParentPageName(String parentPageName) {
+		this.parentPageName = parentPageName;
+	}
+
+	public boolean isHasChild() {
+		return hasChild;
+	}
+
+	public void setHasChild(boolean hasChild) {
+		this.hasChild = hasChild;
 	}
 
 }
