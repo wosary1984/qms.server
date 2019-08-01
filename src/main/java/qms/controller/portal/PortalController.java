@@ -1,6 +1,7 @@
 package qms.controller.portal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,11 @@ public class PortalController extends BaseController {
 	@RequestMapping(path = PATH_PORTAL, method = RequestMethod.GET)
 	public Iterable<ApplicationPage> getPages() {
 		return protalService.getPages();
+	}
+
+	@RequestMapping(path = PATH_PORTAL + "/{pagename}", method = RequestMethod.GET)
+	public ApplicationPage getPerson(@PathVariable String pagename) {
+		return protalService.getPage(pagename);
 	}
 
 }

@@ -28,9 +28,9 @@ public class ProtalService {
 		List<ApplicationPage> pages = null;
 
 		try {
-			List<String> permissions = context.userPermissions();
+			List<String> permissions = context.userPrivileges();
 			pages = applicationPageRepository.findByPrivileges(permissions);
-			permissionCheck(pages,permissions);
+			permissionCheck(pages, permissions);
 			logger.info("user:{}, query pages information", context.getLoginUser().getUsername());
 		} catch (Exception exception) {
 			throw new BadRequestException("Internal Server Error");
@@ -38,19 +38,20 @@ public class ProtalService {
 		return pages;
 	}
 
-	private List<ApplicationPage> permissionCheck(List<ApplicationPage> pages, List<String> persmissions){
+	private List<ApplicationPage> permissionCheck(List<ApplicationPage> pages, List<String> persmissions) {
 
 		for (Iterator<ApplicationPage> iterator = pages.iterator(); iterator.hasNext();) {
 			ApplicationPage cur = iterator.next();
 
-			//check child pages first
-			permissionCheck(cur.getChilds(),persmissions);
+			// check child pages first
+			permissionCheck(cur.getChilds(), persmissions);
 
 			// if user doesn't have current page permission, remove the page from list
-			if(cur.getPrivilege() != null && !persmissions.contains(cur.getPrivilege())){
+			if (cur.getPrivilege() != null && !persmissions.contains(cur.getPrivilege())) {
 				iterator.remove();
 			}
-			// the user have current page permission, but no child pages, remove it from list
+			// the user have current page permission, but no child pages, remove it from
+			// list
 			else if (cur.isHasChild() == true && cur.getChilds().size() == 0) {
 				iterator.remove();
 			}
@@ -58,4 +59,17 @@ public class ProtalService {
 		return pages;
 	}
 
+	public ApplicationPage getPage(String pagename) {
+		ApplicationPage page = null;
+		try {
+			List<String> privileges = context.userPrivileges();
+			page = applicationPageRepository.findPage(pagename, privileges);
+			if (page != null)
+				page.getChilds().clear();
+			logger.info("user:{}, query page {} information", context.getLoginUser().getUsername(), pagename);
+		} catch (Exception exception) {
+			throw new BadRequestException("Internal Server Error");
+		}
+		return page;
+	}
 }

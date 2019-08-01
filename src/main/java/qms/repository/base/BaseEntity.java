@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,22 +26,22 @@ public abstract class BaseEntity implements Serializable  {
 	private static final long serialVersionUID = 1L;
     @CreatedBy
     @Column(name = "createdBy", nullable = false, length = 32, updatable = false)   
-    //@JsonIgnore
+    @JsonIgnore
     private String createdBy;
     
     @CreatedDate
     @Column(name = "createdDate", nullable = false)
-    //@JsonIgnore
+    @JsonIgnore
     private Date createdDate;
     
     @LastModifiedBy
     @Column(name = "modifiedBy", nullable = false, length = 32)
-    //@JsonIgnore
+    @JsonIgnore
     private String modifiedBy;
     
     @LastModifiedDate
     @Column(name = "modifiedDate")
-    //@JsonIgnore
+    @JsonIgnore
     private Date modifiedDate;
 
 	public String getCreatedBy() {

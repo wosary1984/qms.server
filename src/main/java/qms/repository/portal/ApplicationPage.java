@@ -2,7 +2,9 @@ package qms.repository.portal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,8 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-
 
 @Entity
 @Table(name = "T_PAGE")
@@ -38,7 +38,7 @@ public class ApplicationPage implements Serializable {
 	boolean hasChild;
 
 	@Column(name = "c_sequence_number", nullable = true)
-	String sequenceNumber;
+	int sequenceNumber;
 
 	@Column(name = "c_path", nullable = true)
 	String path;
@@ -55,6 +55,9 @@ public class ApplicationPage implements Serializable {
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "parentPageName")
 	List<ApplicationPage> childs = new ArrayList<ApplicationPage>();
+
+	@OneToMany(mappedBy = "page", orphanRemoval = true, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	Set<ApplicationPageAction> actions = new HashSet<ApplicationPageAction>();
 
 	public Long getPageid() {
 		return pageid;
@@ -80,11 +83,11 @@ public class ApplicationPage implements Serializable {
 		this.hasDeleted = hasDeleted;
 	}
 
-	public String getSequenceNumber() {
+	public int getSequenceNumber() {
 		return sequenceNumber;
 	}
 
-	public void setSequenceNumber(String sequenceNumber) {
+	public void setSequenceNumber(int sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 
@@ -134,6 +137,14 @@ public class ApplicationPage implements Serializable {
 
 	public void setHasChild(boolean hasChild) {
 		this.hasChild = hasChild;
+	}
+
+	public Set<ApplicationPageAction> getActions() {
+		return actions;
+	}
+
+	public void setActions(Set<ApplicationPageAction> actions) {
+		this.actions = actions;
 	}
 
 }

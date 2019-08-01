@@ -17,6 +17,11 @@ public interface ApplicationPageRepository extends BaseRepository<ApplicationPag
 			+ "AND (c_privilege is null or c_privilege IN (:privileges))", nativeQuery = true)
 	public List<ApplicationPage> findByPrivileges(@Param("privileges") List<String> privileges);
 
+	@Query(value = "SELECT * FROM T_PAGE WHERE c_has_deleted = FALSE AND c_page_name = :pagename "
+			+ "AND (c_privilege is null or c_privilege IN (:privileges))", nativeQuery = true)
+	public ApplicationPage findPage(@Param("pagename") String pagename,
+			@Param("privileges") List<String> privileges);
+
 	@Query(value = "SELECT * FROM T_PAGE WHERE c_has_deleted = FALSE and c_privilege IS NULL", nativeQuery = true)
 	public List<ApplicationPage> findByPrivileges2();
 

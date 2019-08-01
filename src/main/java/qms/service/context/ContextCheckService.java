@@ -36,16 +36,16 @@ public class ContextCheckService {
 		return loginUser;
 	}
 
-	public List<String> userPermissions() {
-		List<String> permissions = new ArrayList<String>();
+	public List<String> userPrivileges() {
+		List<String> privileges = new ArrayList<String>();
 		if (getLoginUser() != null) {
 			Iterator<ApplicationPrivilege> iterator = getLoginUser().getPrivileges().iterator();
 			while (iterator.hasNext()) {
 				ApplicationPrivilege a = iterator.next();
-				permissions.add(a.getPrivilege());
+				privileges.add(a.getPrivilege());
 			}
 		}
-		return permissions;
+		return privileges;
 	}
 
 }
