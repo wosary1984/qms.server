@@ -55,7 +55,7 @@ public class PersonService {
 			if (jsonPerson == null)
 				throw new BadRequestException("payload person object is missed");
 			// set identity no
-			person.setIdentityno(jsonPerson.isNull("identitycard") ? "" : jsonPerson.getString("identitycard"));
+			person.setIdentityno(jsonPerson.isNull("identityno") ? "" : jsonPerson.getString("identityno"));
 			// set person portrait
 			person.setPortrait(jsonPerson.isNull("portrait") ? null : jsonPerson.getString("portrait").getBytes());
 			// set person first name

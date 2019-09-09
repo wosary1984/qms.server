@@ -41,7 +41,7 @@ public class ApiWebSecurityConfigH2 extends WebSecurityConfigurerAdapter {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private CustomUserService loginUserDetailsService;  
+	private CustomUserService loginUserDetailsService;
 
 	@Autowired
 	private CustomLoginHandler customLoginHandler;
@@ -77,9 +77,15 @@ public class ApiWebSecurityConfigH2 extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				// allow anonymous access treant resource, icon resource
 				.antMatchers("/", "/index.html", "/resources/**", "/treant/**", "/icons/**").permitAll()
+				.antMatchers("/h2-console/**").permitAll()
 				// allow anonymous check his session
 				.antMatchers("/my/session").permitAll().antMatchers("/api/**").authenticated()
 				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+
+		 // this will ignore only h2-console csrf, spring security 4+
+		 http.csrf().ignoringAntMatchers("/h2-console/**");
+		 //this will allow frames with same origin which is much more safe
+		 http.headers().frameOptions().sameOrigin();
 
 		http.formLogin();
 

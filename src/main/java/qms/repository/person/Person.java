@@ -137,6 +137,4 @@ public class Person extends BaseEntity {
 	public void setPortrait(byte[] portrait) {
 		this.portrait = portrait;
 	}
-
-
 }

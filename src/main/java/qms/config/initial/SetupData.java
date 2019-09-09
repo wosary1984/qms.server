@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 import qms.repository.authorization.privilege.ApplicationPrivilege;
 import qms.repository.authorization.privilege.ApplicationPrivilegeRepository;
 import qms.repository.person.PersonPrivilege;
-import qms.repository.portal.SetupPages;
+import qms.repository.portal.SamplePages;
 import qms.repository.user.AdminPrivilege;
 import qms.repository.user.ApplicationUser;
 import qms.repository.user.ApplicationUserRepository;
+import qms.repository.wafer.SampleWaferData;
 
 @Component
 public class SetupData {
@@ -29,22 +30,22 @@ public class SetupData {
     AdminPrivilege adminPrivilege;
 
     @Autowired
-    SetupPages setupPages;
+    SamplePages samplePages;
 
-    
+    @Autowired
+    SampleWaferData sampleWaferData;
 
     @PostConstruct
     public void init() {
-        
         personPrivilege.init();
         adminPrivilege.init();
-
-        setupPages.init();
-
-        initUsers();
+        createInitalUsers();
+        samplePages.init();
+        //sampleWaferData.generateSampleData("waferid");
+        sampleWaferData.generateSampleData2("w2",50,5);
     }
 
-    private void initUsers() {
+    private void createInitalUsers() {
         ApplicationPrivilege privilege1 = privilegeRepository.findByPrivilege("PERSON_READ_PRIVILEGE");
         ApplicationPrivilege privilege2 = privilegeRepository.findByPrivilege("PERSON_WRITE_PRIVILEGE");
 
