@@ -12,6 +12,7 @@ import qms.controller.BaseController;
 import qms.repository.wafer.Wafer;
 import qms.repository.wafer.WaferData;
 import qms.service.wafer.WaferDataService;
+import qms.service.wafer.WaferDataService.WaferCode;
 
 @RestController
 public class WaferDaraController extends BaseController {
@@ -24,9 +25,16 @@ public class WaferDaraController extends BaseController {
 	@RequestMapping(path = PATH_WAFER + "/{waferid}", method = RequestMethod.GET)
 	public Iterable<Wafer> getWaferData(@PathVariable String waferid) {
 
-		//return new WaferModel(waferDataService.getWaferData(waferid), waferDataService.getWaferRadius(waferid));
+		// return new WaferModel(waferDataService.getWaferData(waferid),
+		// waferDataService.getWaferRadius(waferid));
 
 		return waferDataService.getWaferData(waferid);
+	}
+
+	@RequestMapping(path = PATH_WAFER, method = RequestMethod.GET)
+	public Iterable<WaferCode> getWaferData() {
+
+		return waferDataService.getWaferList();
 	}
 
 	protected class WaferModel {

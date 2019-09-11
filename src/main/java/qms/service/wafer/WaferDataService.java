@@ -1,6 +1,7 @@
 package qms.service.wafer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,5 +36,30 @@ public class WaferDataService {
 			throw new BadRequestException("Internal Server Error");
 		}
 		return data;
+	}
+
+	public Iterable<WaferCode> getWaferList() {
+		List<WaferCode> result = null;
+		try {
+			List<Wafer> data = waferRepository.findAll();
+			result = data.stream().map(p -> {
+				return new WaferCode(p);
+			}).collect(Collectors.toList());
+			logger.info("user:{}, query wafer list", context.getLoginUser().getUsername());
+		} catch (Exception exception) {
+			throw new BadRequestException("Internal Server Error");
+		}
+		return result;
+	}
+
+	public class WaferCode {
+
+		public String text;
+		public long id;
+
+		public WaferCode(Wafer wafer) {
+			this.text = wafer.getWaferid();
+			this.id = wafer.getId();
+		}
 	}
 }

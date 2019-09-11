@@ -3,6 +3,7 @@
 	<groupId>qms.server</groupId>
 	<artifactId>qms.server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>qms.server</name>
 	
 	<properties>

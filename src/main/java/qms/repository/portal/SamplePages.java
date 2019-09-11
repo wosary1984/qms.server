@@ -122,7 +122,8 @@ public class SamplePages {
     private interface SEMI_WAFER_PAGE {
         final String name = "Wafer";
         final String path = SEMI_PAGE.path + "/wafer";
-        final String icon = "fa fa-braille";
+        //final String icon = "fa fa-braille";
+        final String icon = "";
         final String parent = SEMI_PAGE.name;
         // final String privilege = PersonPrivilege.write;
         final boolean hasChild = false;
