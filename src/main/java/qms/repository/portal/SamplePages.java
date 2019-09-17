@@ -156,7 +156,7 @@ public class SamplePages {
 
     private interface DATA_PAGE {
         final String name = "Data";
-        final String path = "/data";
+        final String path = "/event";
         final String icon = "fa fa-database";
         final boolean hasChild = true;
         final boolean hasDeleted = false;
@@ -164,9 +164,9 @@ public class SamplePages {
 
     private interface DATA_MAIN_EVENT_PAGE {
         final String name = "Event";
-        final String path = SEMI_PAGE.path + "/event";
-        // final String icon = "fa fa-braille";
-        final String icon = "";
+        final String path = DATA_PAGE.path + "/main";
+        final String icon = "fa fa-history";
+        //final String icon = "";
         final String parent = DATA_PAGE.name;
         // final String privilege = PersonPrivilege.write;
         final boolean hasChild = false;
