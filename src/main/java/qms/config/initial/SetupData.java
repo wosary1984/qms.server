@@ -44,6 +44,7 @@ public class SetupData {
         //sampleWaferData.generateSampleData("waferid");
         sampleWaferData.generateSampleData2("w1",20,5);
         sampleWaferData.generateSampleData2("w2",50,5);
+        sampleWaferData.generateSampleData2("w3",100,5);
     }
 
     private void createInitalUsers() {

@@ -6,6 +6,8 @@ spring:
 server:
   name: qms
   port: 18080
+  servlet:
+    context-path: /qms-server
 
 ---
 #h2

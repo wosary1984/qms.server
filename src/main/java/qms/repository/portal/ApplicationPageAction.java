@@ -31,6 +31,9 @@ public class ApplicationPageAction implements Serializable {
 	@Column(name = "c_action", unique = false, nullable = true)
 	String action;
 
+	@Column(name = "c_action_name", unique = false, nullable = true)
+	String actionName;
+
 	@Column(name = "c_sequence_number", nullable = true)
 	int sequenceNumber;
 
@@ -87,6 +90,14 @@ public class ApplicationPageAction implements Serializable {
 	@JsonIgnore
 	public void setPage(ApplicationPage page) {
 		this.page = page;
+	}
+
+	public String getActionName() {
+		return actionName;
+	}
+
+	public void setActionName(String actionName) {
+		this.actionName = actionName;
 	}
 
 }

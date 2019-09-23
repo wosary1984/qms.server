@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import qms.exception.def.BadRequestException;
 import qms.exception.def.NotFoundException;
 
-
 @RestControllerAdvice
 public class CustomExceptionMapper extends ResponseEntityExceptionHandler {
 
@@ -22,13 +21,12 @@ public class CustomExceptionMapper extends ResponseEntityExceptionHandler {
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
-	
-	@ExceptionHandler(BadRequestException.class)
+
+	@ExceptionHandler(value = { BadRequestException.class })
 	public ResponseEntity<Object> handleNullException(BadRequestException ex) {
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
-
 
 	/**
 	 * Simple structure for sending errors as JSON
