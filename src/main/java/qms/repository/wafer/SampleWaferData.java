@@ -64,10 +64,13 @@ public class SampleWaferData {
         return data;
     }
 
-    public void generateSampleData2(String waferid,long radius, long scale) {
-        Wafer wafer = new Wafer(waferid,radius);
-        List<WaferData> data = this.generateData(wafer, radius, scale);
-        wafer.setData(new HashSet<>(data));
-        waferRepository.save(wafer);
+    public void generateSampleData2(String waferid, long radius, long scale) {
+        if (waferRepository.findByWaferid(waferid).size() == 0) {
+            Wafer wafer = new Wafer(waferid, radius);
+            List<WaferData> data = this.generateData(wafer, radius, scale);
+            wafer.setData(new HashSet<>(data));
+            waferRepository.save(wafer);
+        }
+
     }
 }

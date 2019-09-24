@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: "h2"
+    active: "mysql"
   main:
     banner-mode: "off"
 server:
@@ -45,17 +45,23 @@ spring:
   profiles: mysql
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/feng
-    jdbc-url: jdbc:mysql://localhost:3306/feng
+    url: jdbc:mysql://localhost:3306/qms?useSSL=false
+    jdbc-url: jdbc:mysql://localhost:3306/qms?useSSL=false
     username: root
     password: Welcome1
     type: com.zaxxer.hikari.HikariDataSource
-    data: classpath:data.sql
+    #data: classpath:mysql/data.sql
     data-username: root 
     data-password: Welcome1 
     initialization-mode: always
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
     properties: 
       hibernate: 
         hbm2ddl:  
           auto: update
+    show-sql: false
+
