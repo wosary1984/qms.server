@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import qms.exception.def.BadRequestException;
+import qms.repository.data.Factor;
 import qms.repository.data.FactorEvent;
+import qms.repository.data.FactorEventRepository;
 import qms.repository.data.FactorRepository;
-import qms.repository.data.KeyFactor;
 import qms.service.context.ContextCheckService;
 
 @Service
@@ -28,12 +30,15 @@ public class FactorDataService {
 	private FactorRepository factorRepository;
 
 	@Autowired
+	private FactorEventRepository factorEventRepository;
+
+	@Autowired
 	ContextCheckService context;
 
 	public Iterable<FactorSummary> getFactorList() {
 		List<FactorSummary> result = null;
 		try {
-			List<KeyFactor> data = factorRepository.findAll();
+			List<Factor> data = factorRepository.findAll();
 			result = data.stream().map(p -> {
 				return new FactorSummary(p);
 			}).collect(Collectors.toList());
@@ -44,13 +49,32 @@ public class FactorDataService {
 		return result;
 	}
 
-	public KeyFactor getFactor(String key) {
+	public Factor getFactor(String key) {
 		return factorRepository.findByKey(key);
 	}
 
-	public KeyFactor createFactor(String data) {
+	public Factor deleteEvent(String eventid) {
+		Factor factor = null;
+		FactorEvent event = factorEventRepository.findByEventid(Long.parseLong(eventid));
+		if (event != null)
+			factor = event.getFactor();
+
+		if (factor != null) {
+			Iterator<FactorEvent> iter = factor.getEvents().iterator();
+			while (iter.hasNext()) {
+				if (iter.next().getEventid() == Long.parseLong(eventid)) {
+					iter.remove();
+				}
+			}
+			factorRepository.save(factor);
+		}
+
+		return factor;
+	}
+
+	public Factor createFactor(String data) {
 		JSONObject object = new JSONObject(data);
-		KeyFactor factor = new KeyFactor();
+		Factor factor = new Factor();
 		String action = object.isNull("action") ? "" : object.getString("action");
 
 		if (action.equalsIgnoreCase("create")) {
@@ -72,9 +96,9 @@ public class FactorDataService {
 		return factor;
 	}
 
-	public KeyFactor createEvent(String data) {
+	public Factor createEvent(String data) {
 		JSONObject object = new JSONObject(data);
-		KeyFactor factor;
+		Factor factor;
 		String action = object.isNull("action") ? "" : object.getString("action");
 
 		if (action.equalsIgnoreCase("create")) {
@@ -87,11 +111,15 @@ public class FactorDataService {
 			String title = json.isNull("title") ? "" : json.getString("title");
 			String content = json.isNull("content") ? "" : json.getString("content");
 			String date = json.isNull("date") ? "" : json.getString("date");
-			Date dt;
-			try {
-				dt = new SimpleDateFormat("yyyy/MM/dd").parse(date);
-			} catch (ParseException e) {
-				throw new BadRequestException(e.getMessage());
+			Boolean bc = json.isNull("bc") ? false : json.getBoolean("bc");
+			int year = json.isNull("year") ? 0 : json.getInt("year");
+			Date dt = null;
+			if (!bc) {
+				try {
+					dt = new SimpleDateFormat("yyyy/MM/dd").parse(date);
+				} catch (ParseException e) {
+					throw new BadRequestException(e.getMessage());
+				}
 			}
 
 			factor = factorRepository.findByKey(factorKey);
@@ -99,17 +127,20 @@ public class FactorDataService {
 				throw new BadRequestException("factor key:" + factorKey + " is not existed");
 
 			FactorEvent event = new FactorEvent();
+			event.setBc(bc);
 			event.setTitle(title);
 			event.setContent(content);
-			event.setDate(dt);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(dt);
-			event.setYear(cal.get(Calendar.YEAR));
-			event.setMonth(cal.get(Calendar.MONTH) + 1);
-			event.setDay(cal.get(Calendar.DAY_OF_MONTH));
-
+			if (bc) {
+				event.setYear(year);
+			} else {
+				event.setDate(dt);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dt);
+				event.setYear(cal.get(Calendar.YEAR));
+				event.setMonth(cal.get(Calendar.MONTH) + 1);
+				event.setDay(cal.get(Calendar.DAY_OF_MONTH));
+			}
 			event.setFactor(factor);
-
 			factor.getEvents().add(event);
 			factorRepository.save(factor);
 
@@ -130,7 +161,7 @@ public class FactorDataService {
 		public long id;
 		public int count;
 
-		public FactorSummary(KeyFactor factor) {
+		public FactorSummary(Factor factor) {
 			this.key = factor.getKey();
 			this.name = factor.getName();
 			this.desc = factor.getDesc();

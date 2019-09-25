@@ -16,8 +16,8 @@ import javax.persistence.Table;
 import qms.repository.base.BaseEntity;
 
 @Entity
-@Table(name = "T_KEY_FACTOR")
-public class KeyFactor extends BaseEntity {
+@Table(name = "T_FACTOR")
+public class Factor extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

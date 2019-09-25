@@ -4,10 +4,10 @@ import java.util.List;
 
 import qms.repository.base.BaseRepository;
 
-public interface FactorRepository extends BaseRepository<KeyFactor, Long> {
+public interface FactorRepository extends BaseRepository<Factor, Long> {
 
-	public KeyFactor findByKey(String key);
+	public Factor findByKey(String key);
 
-	public List<KeyFactor> findAll();
+	public List<Factor> findAll();
 
 }

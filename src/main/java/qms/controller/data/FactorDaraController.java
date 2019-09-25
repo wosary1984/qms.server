@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import qms.controller.BaseController;
-import qms.repository.data.KeyFactor;
+import qms.repository.data.Factor;
 import qms.repository.wafer.WaferData;
 import qms.service.data.FactorDataService;
 
@@ -30,19 +30,25 @@ public class FactorDaraController extends BaseController {
 	}
 
 	@RequestMapping(path = PATH_FACTOR, method = RequestMethod.POST)
-	public KeyFactor createFactor(@RequestBody String data) {
+	public Factor createFactor(@RequestBody String data) {
 		return factorDataService.createFactor(data);
 	}
 
 	@RequestMapping(path = PATH_FACTOR_EVENT, method = RequestMethod.POST)
-	public KeyFactor createEvent(@RequestBody String data) {
+	public Factor createEvent(@RequestBody String data) {
 		return factorDataService.createEvent(data);
 	}
 
 	@RequestMapping(path = PATH_FACTOR + "/{key}", method = RequestMethod.GET)
-	public KeyFactor getFactor(@PathVariable String key) {
+	public Factor getFactor(@PathVariable String key) {
 
 		return factorDataService.getFactor(key);
+	}
+
+	@RequestMapping(path = PATH_FACTOR_EVENT + "/{key}", method = RequestMethod.DELETE)
+	public Factor deleteEvent(@PathVariable String key) {
+
+		return factorDataService.deleteEvent(key);
 	}
 
 	protected class WaferModel {

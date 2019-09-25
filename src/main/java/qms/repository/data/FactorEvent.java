@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import qms.repository.base.BaseEntity;
 
 @Entity
-@Table(name = "T_KEY_FACTOR_EVENTS")
+@Table(name = "T_FACTOR_EVENTS")
 public class FactorEvent extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -45,6 +45,9 @@ public class FactorEvent extends BaseEntity {
     @Column(name = "c_event_date", unique = false, nullable = true)
     Date date;
 
+    @Column(name = "c_event_date_bc")
+    Boolean bc;
+
     @Column(name = "c_event_country")
     Date country;
 
@@ -53,7 +56,7 @@ public class FactorEvent extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "c_keyid")
-    KeyFactor factor;
+    Factor factor;
 
     public Long getEventid() {
         return eventid;
@@ -128,11 +131,19 @@ public class FactorEvent extends BaseEntity {
     }
 
     @JsonIgnore
-    public KeyFactor getFactor() {
+    public Factor getFactor() {
         return factor;
     }
 
-    public void setFactor(KeyFactor factor) {
+    public void setFactor(Factor factor) {
         this.factor = factor;
+    }
+
+    public Boolean getBc() {
+        return bc;
+    }
+
+    public void setBc(Boolean bc) {
+        this.bc = bc;
     }
 }
