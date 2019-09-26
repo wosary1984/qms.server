@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import qms.exception.def.BadRequestException;
+import qms.repository.data.EventRelatedFactor;
 import qms.repository.data.Factor;
 import qms.repository.data.FactorEvent;
 import qms.repository.data.FactorEventRepository;
@@ -141,6 +142,9 @@ public class FactorDataService {
 				event.setDay(cal.get(Calendar.DAY_OF_MONTH));
 			}
 			event.setFactor(factor);
+			EventRelatedFactor r = new EventRelatedFactor(factor.getKey(), Factor.class.getName(), event);
+			event.getRelatedFactors().add(r);
+
 			factor.getEvents().add(event);
 			factorRepository.save(factor);
 

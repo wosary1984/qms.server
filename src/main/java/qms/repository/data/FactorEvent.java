@@ -1,7 +1,10 @@
 package qms.repository.data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -57,6 +61,9 @@ public class FactorEvent extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "c_keyid")
     Factor factor;
+
+    @OneToMany(mappedBy = "event", orphanRemoval = true, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    Set<EventRelatedFactor> relatedFactors = new HashSet<EventRelatedFactor>();
 
     public Long getEventid() {
         return eventid;
@@ -145,5 +152,13 @@ public class FactorEvent extends BaseEntity {
 
     public void setBc(Boolean bc) {
         this.bc = bc;
+    }
+
+    public Set<EventRelatedFactor> getRelatedFactors() {
+        return relatedFactors;
+    }
+
+    public void setRelatedFactors(Set<EventRelatedFactor> relatedFactors) {
+        this.relatedFactors = relatedFactors;
     }
 }

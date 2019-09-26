@@ -14,15 +14,19 @@ import qms.repository.base.BaseEntity;
 public class Tag extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    public enum TagClassification {
+        DATETIME, LOCATION, CHARACTER, EMOTION
+    }
+
     @Id
     @Column(name = "c_tag_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tagid;
 
-    @Column(name = "c_tag_object", nullable = true)
-    long objectid;
+    @Column(name = "c_tag_classification", nullable = true)
+    TagClassification classification;
 
-    @Column(name = "c_tag")
+    @Column(name = "c_tag", unique = true, nullable = true)
     String tag;
 
     @Column(name = "c_is_active")
