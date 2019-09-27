@@ -39,6 +39,11 @@ public class FactorDaraController extends BaseController {
 		return factorDataService.createEvent(data);
 	}
 
+	@RequestMapping(path = PATH_FACTOR_EVENT, method = RequestMethod.PUT)
+	public Factor updateEvent(@RequestBody String data) {
+		return factorDataService.updateEvent(data);
+	}
+
 	@RequestMapping(path = PATH_FACTOR + "/{key}", method = RequestMethod.GET)
 	public Factor getFactor(@PathVariable String key) {
 

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,87 @@ public class FactorDataService {
 		return factor;
 	}
 
+	public Factor updateEvent(String data) {
+		JSONObject object = new JSONObject(data);
+		Factor factor;
+		String action = object.isNull("action") ? "" : object.getString("action");
+
+		if (action.equalsIgnoreCase("edit")) {
+			JSONObject jsonEvent = object.getJSONObject("event");
+			if (jsonEvent == null) {
+				throw new BadRequestException("payload event missed");
+			}
+			JSONObject jsonFactor = jsonEvent.getJSONObject("factor");
+			if (jsonFactor == null) {
+				throw new BadRequestException("payload factor missed");
+			}
+
+			String factorKey = jsonFactor.isNull("key") ? "" : jsonFactor.getString("key");
+			// String factorName = json.isNull("factor") ? "" : json.getString("factor");
+			long eventid = jsonEvent.isNull("eventid") ? 0 : jsonEvent.getLong("eventid");
+			String title = jsonEvent.isNull("title") ? "" : jsonEvent.getString("title");
+			String content = jsonEvent.isNull("content") ? "" : jsonEvent.getString("content");
+			String date = jsonEvent.isNull("date") ? "" : jsonEvent.getString("date");
+			Boolean bc = jsonEvent.isNull("bc") ? false : jsonEvent.getBoolean("bc");
+			int year = jsonEvent.isNull("year") ? 0 : jsonEvent.getInt("year");
+			Date dt = null;
+			if (!bc) {
+				try {
+					dt = new SimpleDateFormat("yyyy/MM/dd").parse(date);
+				} catch (ParseException e) {
+					throw new BadRequestException("input date is not right");
+				}
+			}
+
+			factor = factorRepository.findByKey(factorKey);
+			if (factor == null) {
+				throw new BadRequestException("factor key:" + factorKey + " is not existed");
+			}
+
+			// FactorEvent event = new FactorEvent();
+			FactorEvent event = factorEventRepository.findByEventid(eventid);
+			if (event == null) {
+				throw new BadRequestException("event id:" + eventid + " is not existed");
+			}
+
+			event.setBc(bc);
+			event.setTitle(title);
+			event.setContent(content);
+			if (bc) {
+				event.setYear(year);
+			} else {
+				event.setDate(dt);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dt);
+				event.setYear(cal.get(Calendar.YEAR));
+				event.setMonth(cal.get(Calendar.MONTH) + 1);
+				event.setDay(cal.get(Calendar.DAY_OF_MONTH));
+			}
+			event.setFactor(factor);
+
+			// handle related factors
+			event.getRelatedFactors().clear();
+			JSONArray relatedArray = jsonEvent.getJSONArray("relatedFactors");
+			for (int i = 0; i < relatedArray.length(); i++) {
+				JSONObject r = relatedArray.getJSONObject(i);
+				String rkey = r.isNull("key") ? "" : r.getString("key");
+				// String rname = r.isNull("name") ? "" : r.getString("name");
+				EventRelatedFactor rf = new EventRelatedFactor(rkey, Factor.class.getName(), event);
+				event.getRelatedFactors().add(rf);
+			}
+
+			factor.getEvents().add(event);
+			factorRepository.save(factor);
+
+			logger.info("User: {}, update factor:{} event: {} information", context.getLoginUser().getUsername(),
+					factor.getKey(), event.getEventid());
+		} else {
+			throw new BadRequestException("payload action is missed or not correct");
+		}
+
+		return factor;
+	}
+
 	public Factor createEvent(String data) {
 		JSONObject object = new JSONObject(data);
 		Factor factor;
@@ -142,14 +224,23 @@ public class FactorDataService {
 				event.setDay(cal.get(Calendar.DAY_OF_MONTH));
 			}
 			event.setFactor(factor);
-			EventRelatedFactor r = new EventRelatedFactor(factor.getKey(), Factor.class.getName(), event);
-			event.getRelatedFactors().add(r);
+
+			// handle related factors
+			event.getRelatedFactors().clear();
+			JSONArray relatedArray = json.getJSONArray("relatedFactors");
+			for (int i = 0; i < relatedArray.length(); i++) {
+				JSONObject r = relatedArray.getJSONObject(i);
+				String rkey = r.isNull("key") ? "" : r.getString("key");
+				// String rname = r.isNull("name") ? "" : r.getString("name");
+				EventRelatedFactor rf = new EventRelatedFactor(rkey, Factor.class.getName(), event);
+				event.getRelatedFactors().add(rf);
+			}
 
 			factor.getEvents().add(event);
 			factorRepository.save(factor);
 
-			logger.info("User: {}, add event for factor: {} information", context.getLoginUser().getUsername(),
-					factor.getKey());
+			logger.info("User: {}, create event:{} for factor:{} information", context.getLoginUser().getUsername(),
+					event.getEventid(), factor.getKey());
 		} else {
 			throw new BadRequestException("payload action is missed or not correct");
 		}
