@@ -1,5 +1,6 @@
 package qms.repository.data;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -113,8 +114,16 @@ public class FactorEvent extends BaseEntity {
         this.day = day;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        if (this.bc)
+            return null;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.date);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        return Integer.toString(year) + "/" + Integer.toString(month) + "/" + Integer.toString(day);
     }
 
     public void setDate(Date date) {
