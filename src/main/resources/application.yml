@@ -1,10 +1,11 @@
 spring:
+  application:
+    name: qms
   profiles:
-    active: "mysql"
+    active: "h2"
   main:
     banner-mode: "off"
 server:
-  name: qms
   port: 18080
   servlet:
     context-path: /qms-server

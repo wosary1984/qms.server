@@ -34,7 +34,7 @@ public class SessionController extends BaseController {
 	 */
 
 	@GetMapping(value = PATH_MY_SESSION, produces = MEDIA_TYPE)
-	public String query() throws JSONException {
+	public String mySession() throws JSONException {
 		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = context.getAuthentication();
 		logger.debug("requested sessionid={} query auth information", request.getRequestedSessionId());

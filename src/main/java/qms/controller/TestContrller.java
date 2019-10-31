@@ -2,6 +2,7 @@ package qms.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class TestContrller extends BaseController {
 		if (request.getSession() != null) {
 			logger.info("session id:{}", request.getSession().getId());
 		}
-		return success("helloworld", 200, "Hello World from contrller");
+		return success("helloworld", 200, new JSONObject("Hello World from contrller"));
 	}
 
 }

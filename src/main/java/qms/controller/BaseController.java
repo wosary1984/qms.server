@@ -87,7 +87,7 @@ public abstract class BaseController {
 		response.flushBuffer();
 	}
 
-	protected String success(String action, int code, Object object) {
+	protected String success(String action, int code, JSONObject object) {
 		JSONObject root = new JSONObject();
 
 		try {
