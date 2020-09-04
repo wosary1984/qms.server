@@ -6,7 +6,7 @@ spring:
   main:
     banner-mode: "off"
 server:
-  port: 18080
+  port: 8090
   servlet:
     context-path: /qms-server
 
